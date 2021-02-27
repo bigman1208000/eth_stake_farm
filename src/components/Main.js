@@ -5,7 +5,7 @@ class Main extends Component {
 	render() {
 		return (
 			<div id='content' className='mt-3'>
-				<table className='table table-borderless text-muted text-center'>
+				<table className='table table-borderless text-center'>
 					<thead>
 						<tr>
 							<th scope='col'>You are Staking</th>
@@ -14,8 +14,14 @@ class Main extends Component {
 					</thead>
 					<tbody>
 						<tr>
-							<td>{window.web3.utils.fromWei(this.props.stakingBalance, "Ether")} mDAI</td>
-							<td>{window.web3.utils.fromWei(this.props.dappTokenBalance, "Ether")} DAPP</td>
+							<td>
+								{window.web3.utils.fromWei(this.props.stakingBalance, "Ether")}{" "}
+								<span class='text-muted'>mDAI</span>
+							</td>
+							<td>
+								{window.web3.utils.fromWei(this.props.dappTokenBalance, "Ether")}{" "}
+								<span class='text-muted'>DAPP</span>
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -35,8 +41,9 @@ class Main extends Component {
 								<label className='float-left'>
 									<b>Stake Tokens</b>
 								</label>
-								<span className='float-right text-muted'>
-									Balance: {window.web3.utils.fromWei(this.props.daiTokenBalance, "Ether")}
+								<span className='float-right'>
+									<span class='text-muted'>Balance:</span>
+									{window.web3.utils.fromWei(this.props.daiTokenBalance, "Ether")}
 								</span>
 							</div>
 							<div className='input-group mb-4'>
@@ -51,7 +58,7 @@ class Main extends Component {
 								/>
 								<div className='input-group-append'>
 									<div className='input-group-text'>
-										<img src={dai} height='32' alt='' />
+										<img src={dai} height='30' alt='' />
 										&nbsp;&nbsp;&nbsp; mDAI
 									</div>
 								</div>
@@ -61,7 +68,7 @@ class Main extends Component {
 						<div class='row'>
 							<div class='col'>
 								{" "}
-								<button type='submit' className='btn btn-block btn-outline-primary btn-lg'>
+								<button type='submit' className='btn btn-block btn-primary btn-lg'>
 									STAKE
 								</button>
 							</div>

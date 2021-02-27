@@ -17,9 +17,15 @@ class Navbar extends Component {
 
 				<ul className='navbar-nav px-3'>
 					<li className='nav-item d-none d-sm-none d-sm-block'>
-						<small className='text-white'>
-							<small id='account'>connected account: {this.props.account}</small>
-						</small>
+						<div className='text-muted'>
+							<span id='account'>
+								connected account:{" "}
+								<span class='text-white'>
+									{this.props.account.slice(0, 7)}...
+									{this.props.account.slice(37, 42)}
+								</span>
+							</span>
+						</div>
 					</li>
 				</ul>
 			</nav>
