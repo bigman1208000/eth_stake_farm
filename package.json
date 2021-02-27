@@ -1,40 +1,55 @@
 {
-  "name": "defi-tutorial",
-  "version": "0.1.0",
-  "description": "DeFi Token Staking App",
-  "author": "gregory@dappuniversity.com",
-  "dependencies": {
-    "babel-polyfill": "6.26.0",
-    "babel-preset-env": "1.7.0",
-    "babel-preset-es2015": "6.24.1",
-    "babel-preset-stage-2": "6.24.1",
-    "babel-preset-stage-3": "6.24.1",
-    "babel-register": "6.26.0",
-    "bootstrap": "4.3.1",
-    "chai": "4.2.0",
-    "chai-as-promised": "7.1.1",
-    "chai-bignumber": "3.0.0",
-    "identicon.js": "^2.3.3",
-    "react": "16.8.4",
-    "react-bootstrap": "1.0.0-beta.5",
-    "react-dom": "16.8.4",
-    "react-scripts": "2.1.3",
-    "truffle": "5.1.39",
-    "web3": "1.2.11"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": [
-    ">0.2%",
-    "not dead",
-    "not ie <= 11",
-    "not op_mini all"
-  ]
+	"name": "stake-dapp",
+	"version": "0.1.1",
+	"description": "Staking DApp",
+	"author": "Andy",
+	"dependencies": {
+		"babel-polyfill": "6.26.0",
+		"babel-preset-env": "1.7.0",
+		"babel-preset-es2015": "6.24.1",
+		"babel-preset-stage-2": "6.24.1",
+		"babel-preset-stage-3": "6.24.1",
+		"babel-register": "6.26.0",
+		"bootstrap": "4.3.1",
+		"chai": "4.2.0",
+		"chai-as-promised": "7.1.1",
+		"chai-bignumber": "3.0.0",
+		"identicon.js": "^2.3.3",
+		"react": "16.8.4",
+		"react-bootstrap": "1.0.0-beta.5",
+		"react-dom": "16.8.4",
+		"react-scripts": "2.1.3",
+		"truffle": "5.1.39",
+		"web3": "1.2.11"
+	},
+	"scripts": {
+		"start": "react-scripts start",
+		"build": "react-scripts build",
+		"test": "react-scripts test",
+		"eject": "react-scripts eject",
+		"lint": "solium -d contracts",
+		"prettier": "prettier --write **/*.sol",
+		"lintfix": "npm run lint -- --fix",
+		"cover": "solidity-coverage",
+		"truffle:test": "truffle test",
+		"compile": "truffle compile",
+		"migrate:develop": "truffle migrate --network development --reset",
+		"migrate:testnet_binance": "truffle migrate --network testnet_binance",
+		"migrate:rinkeby": "truffle migrate --network rinkeby",
+		"flatten": "truffle-flattener ./contracts/MyToken.sol > build/MyTokenFlatten.sol",
+		"ganache": "ganache-cli --networkId 50 -p 8545 -m \"spike whip cancel pottery blade crane tomato flower ginger acid lava company\""
+	},
+	"devDependencies": {
+		"@truffle/hdwallet-provider": "^1.2.1",
+		"dotenv": "^8.2.0"
+	},
+	"eslintConfig": {
+		"extends": "react-app"
+	},
+	"browserslist": [
+		">0.2%",
+		"not dead",
+		"not ie <= 11",
+		"not op_mini all"
+	]
 }
