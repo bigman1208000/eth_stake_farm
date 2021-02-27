@@ -16,10 +16,10 @@
 		"chai-bignumber": "3.0.0",
 		"identicon.js": "^2.3.3",
 		"react": "16.8.4",
-		"react-bootstrap": "1.0.0-beta.5",
+		"react-bootstrap": "^1.5.0",
 		"react-dom": "16.8.4",
 		"react-scripts": "2.1.3",
-		"truffle": "5.1.39",
+		"truffle": "^5.1.67",
 		"web3": "1.2.11"
 	},
 	"scripts": {
@@ -28,6 +28,7 @@
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
 		"lint": "solium -d contracts",
+		"issueTokens": "node /scripts/issue-token.js",
 		"prettier": "prettier --write **/*.sol",
 		"lintfix": "npm run lint -- --fix",
 		"cover": "solidity-coverage",
