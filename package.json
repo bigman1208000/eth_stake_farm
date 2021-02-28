@@ -27,21 +27,9 @@
 		"build": "react-scripts build",
 		"test": "react-scripts test",
 		"eject": "react-scripts eject",
-		"lint": "solium -d contracts",
-		"issueTokens": "node /scripts/issue-token.js",
-		"prettier": "prettier --write **/*.sol",
-		"lintfix": "npm run lint -- --fix",
-		"cover": "solidity-coverage",
-		"truffle:test": "truffle test",
-		"compile": "truffle compile",
-		"migrate:develop": "truffle migrate --network development --reset",
-		"migrate:testnet_binance": "truffle migrate --network testnet_binance",
-		"migrate:rinkeby": "truffle migrate --network rinkeby",
-		"flatten": "truffle-flattener ./contracts/MyToken.sol > build/MyTokenFlatten.sol",
-		"ganache": "ganache-cli --networkId 50 -p 8545 -m \"spike whip cancel pottery blade crane tomato flower ginger acid lava company\""
+		"lintfix": "npm run lint -- --fix"
 	},
 	"devDependencies": {
-		"@truffle/hdwallet-provider": "^1.2.1",
 		"dotenv": "^8.2.0"
 	},
 	"eslintConfig": {

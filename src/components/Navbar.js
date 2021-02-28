@@ -20,7 +20,7 @@ class Navbar extends Component {
 						<div className='text-muted'>
 							<span id='account'>
 								connected account:{" "}
-								<span class='text-white'>
+								<span className='text-white'>
 									{this.props.account.slice(0, 7)}...
 									{this.props.account.slice(37, 42)}
 								</span>

@@ -1,11 +1,17 @@
 import React, { Component } from "react"
 import Web3 from "web3"
-import DaiToken from "../abis/DaiToken.json"
-import DappToken from "../abis/DappToken.json"
-import TokenFarm from "../abis/TokenFarm.json"
+import ERC20ABI from "../abis/ERC20ABI.json"
+import TokenFarmABI from "../abis/TokenFarm.json"
 import Navbar from "./Navbar"
 import Main from "./Main"
 import "./App.css"
+import {
+	ChainID,
+	StakingDecimals,
+	RewardContractAddress,
+	StakingContractAddresss,
+	TokenFarmContractAddress,
+} from "./constants"
 
 class App extends Component {
 	async componentWillMount() {
@@ -20,42 +26,26 @@ class App extends Component {
 		this.setState({ account: accounts[0] })
 
 		const networkId = await web3.eth.net.getId()
-
-		// Load DaiToken
-		const daiTokenData = DaiToken.networks[networkId]
-		if (daiTokenData) {
-			const daiToken = new web3.eth.Contract(DaiToken.abi, daiTokenData.address)
-			this.setState({ daiToken })
-			this.setState({ daiContractAddress: daiTokenData.address })
-			let daiTokenBalance = await daiToken.methods.balanceOf(this.state.account).call()
-			this.setState({ daiTokenBalance: daiTokenBalance.toString() })
-		} else {
-			window.alert("DaiToken contract not deployed to detected network.")
+		if (networkId !== ChainID) {
+			window.alert("please conenct to the correct network")
+			return
 		}
 
-		// Load DappToken
-		const dappTokenData = DappToken.networks[networkId]
-		if (dappTokenData) {
-			const dappToken = new web3.eth.Contract(DappToken.abi, dappTokenData.address)
-			this.setState({ dappContractAddress: dappTokenData.address })
-			this.setState({ dappToken })
-			let dappTokenBalance = await dappToken.methods.balanceOf(this.state.account).call()
-			this.setState({ dappTokenBalance: dappTokenBalance.toString() })
-		} else {
-			window.alert("DappToken contract not deployed to detected network.")
-		}
+		const rewardToken = new web3.eth.Contract(ERC20ABI, RewardContractAddress)
+		this.setState({ rewardToken })
+		this.setState({ rewardTokenContractAddress: RewardContractAddress })
+		let rewardTokenBalance = await rewardToken.methods.balanceOf(this.state.account).call()
+		this.setState({ rewardTokenBalance: rewardTokenBalance.toString() })
 
-		// Load TokenFarm
-		const tokenFarmData = TokenFarm.networks[networkId]
-		if (tokenFarmData) {
-			const tokenFarm = new web3.eth.Contract(TokenFarm.abi, tokenFarmData.address)
-			this.setState({ farmContractAddress: tokenFarmData.address.toString() })
-			this.setState({ tokenFarm })
-			let stakingBalance = await tokenFarm.methods.stakingBalance(this.state.account).call()
-			this.setState({ stakingBalance: stakingBalance.toString() })
-		} else {
-			window.alert("TokenFarm contract not deployed to detected network.")
-		}
+		const stakingToken = new web3.eth.Contract(ERC20ABI, StakingContractAddresss)
+		this.setState({ stakingContractAddress: StakingContractAddresss })
+		this.setState({ stakingToken })
+
+		const tokenFarm = new web3.eth.Contract(TokenFarmABI, TokenFarmContractAddress)
+		this.setState({ farmContractAddress: TokenFarmContractAddress })
+		this.setState({ tokenFarm })
+		let stakingBalance = await tokenFarm.methods.stakingBalance(this.state.account).call()
+		this.setState({ stakingBalance: stakingBalance.toString() })
 
 		this.setState({ loading: false })
 	}
@@ -73,8 +63,8 @@ class App extends Component {
 
 	stakeTokens = (amount) => {
 		this.setState({ loading: true })
-		this.state.daiToken.methods
-			.approve(this.state.tokenFarm._address, amount)
+		this.state.stakingToken.methods
+			.approve(this.state.tokenFarm._address, amount * 10 * StakingDecimals)
 			.send({ from: this.state.account })
 			.on("transactionHash", (hash) => {
 				this.state.tokenFarm.methods
@@ -100,13 +90,13 @@ class App extends Component {
 		super(props)
 		this.state = {
 			account: "0x0",
-			daiToken: {},
-			dappToken: {},
+			rewardToken: {},
+			stakingToken: {},
 			tokenFarm: {},
-			daiContractAddress: "0x...",
-			dappContractAddress: "0x...",
-			daiTokenBalance: "0",
-			dappTokenBalance: "0",
+			rewardTokenContractAddress: RewardContractAddress,
+			stakingContractAddress: StakingContractAddresss,
+			rewardTokenBalance: "0",
+			stakingTokenBalance: "0",
 			stakingBalance: "0",
 			loading: true,
 		}
@@ -124,10 +114,9 @@ class App extends Component {
 			content = (
 				<Main
 					farmContractAddress={this.state.farmContractAddress}
-					daiContractAddress={this.state.daiContractAddress}
-					dappContractAddress={this.state.dappContractAddress}
-					daiTokenBalance={this.state.daiTokenBalance}
-					dappTokenBalance={this.state.dappTokenBalance}
+					rewardTokenContractAddress={this.state.rewardTokenContractAddress}
+					stakingContractAddress={this.state.stakingContractAddress}
+					rewardTokenBalance={this.state.rewardTokenBalance}
 					stakingBalance={this.state.stakingBalance}
 					stakeTokens={this.stakeTokens}
 					unstakeTokens={this.unstakeTokens}

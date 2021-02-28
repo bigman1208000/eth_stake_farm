@@ -9,18 +9,17 @@ class Main extends Component {
 					<thead>
 						<tr>
 							<th scope='col'>You are Staking</th>
-							<th scope='col'>Your DAPP Balance</th>
+							<th scope='col'>Your RewardToken Balance</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
 							<td>
-								{window.web3.utils.fromWei(this.props.stakingBalance, "Ether")}{" "}
-								<span class='text-muted'>mDAI</span>
+								{this.props.stakingBalance * 10 * 6}{" "}
+								<span className='text-muted'>stakingToken</span>
 							</td>
 							<td>
-								{window.web3.utils.fromWei(this.props.dappTokenBalance, "Ether")}{" "}
-								<span class='text-muted'>DAPP</span>
+								{this.props.rewardTokenBalance} <span className='text-muted'>rewardToken</span>
 							</td>
 						</tr>
 					</tbody>
@@ -31,10 +30,6 @@ class Main extends Component {
 							className='mb-3'
 							onSubmit={(event) => {
 								event.preventDefault()
-								let amount
-								amount = this.input.value.toString()
-								amount = window.web3.utils.toWei(amount, "Ether")
-								this.props.stakeTokens(amount)
 							}}
 						>
 							<div>
@@ -42,8 +37,8 @@ class Main extends Component {
 									<b>Stake Tokens</b>
 								</label>
 								<span className='float-right'>
-									<span class='text-muted'>Balance:</span>
-									{window.web3.utils.fromWei(this.props.daiTokenBalance, "Ether")}
+									<span className='text-muted'>Balance:</span>
+									{this.props.rewardTokenBalance * 10 * 6}
 								</span>
 							</div>
 							<div className='input-group mb-4'>
@@ -59,20 +54,28 @@ class Main extends Component {
 								<div className='input-group-append'>
 									<div className='input-group-text'>
 										<img src={dai} height='30' alt='' />
-										&nbsp;&nbsp;&nbsp; mDAI
+										&nbsp;&nbsp;&nbsp; rewardToken
 									</div>
 								</div>
 							</div>
 						</form>
 
-						<div class='row'>
-							<div class='col'>
-								{" "}
-								<button type='submit' className='btn btn-block btn-primary btn-lg'>
+						<div className='row'>
+							<div className='col'>
+								<button
+									className='btn btn-block btn-primary btn-lg'
+									type='submit'
+									onClick={(event) => {
+										event.preventDefault()
+										let amount
+										amount = this.input.value.toString()
+										this.props.stakeTokens(amount)
+									}}
+								>
 									STAKE
 								</button>
 							</div>
-							<div class='col'>
+							<div className='col'>
 								{" "}
 								<button
 									type='submit'
@@ -90,10 +93,14 @@ class Main extends Component {
 				</div>
 				<div className='card mt-4'>
 					<div className='card-body'>
-						<ul class='list-group list-group-flush font-weight-light'>
-							<li class='list-group-item'>mDAI contract: {this.props.daiContractAddress}</li>
-							<li class='list-group-item'>DAPP contract: {this.props.dappContractAddress}</li>
-							<li class='list-group-item'>Farm contract: {this.props.farmContractAddress}</li>
+						<ul className='list-group list-group-flush font-weight-light'>
+							<li className='list-group-item'>
+								Staking Token Contract: {this.props.stakingContractAddress}
+							</li>
+							<li className='list-group-item'>
+								Reward Token Contract: {this.props.rewardTokenContractAddress}
+							</li>
+							<li className='list-group-item'>Farm Contract: {this.props.farmContractAddress}</li>
 						</ul>
 					</div>
 				</div>
