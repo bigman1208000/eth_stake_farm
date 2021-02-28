@@ -7,11 +7,14 @@ import Main from "./Main"
 import "./App.css"
 import {
 	ChainID,
-	StakingDecimals,
 	RewardContractAddress,
 	StakingContractAddresss,
 	TokenFarmContractAddress,
 } from "./constants"
+
+function sleep(ms) {
+	return new Promise((resolve) => setTimeout(resolve, ms))
+}
 
 class App extends Component {
 	async componentWillMount() {
@@ -31,21 +34,26 @@ class App extends Component {
 			return
 		}
 
+		//Stake Token
+		const stakingToken = new web3.eth.Contract(ERC20ABI, StakingContractAddresss)
+		this.setState({ stakingContractAddress: StakingContractAddresss })
+		this.setState({ stakingToken })
+		let stakingTokensBalance = await stakingToken.methods.balanceOf(this.state.account).call()
+		this.setState({ stakingTokensBalance: stakingTokensBalance.toString() })
+
+		//Reward Token
 		const rewardToken = new web3.eth.Contract(ERC20ABI, RewardContractAddress)
 		this.setState({ rewardToken })
 		this.setState({ rewardTokenContractAddress: RewardContractAddress })
 		let rewardTokenBalance = await rewardToken.methods.balanceOf(this.state.account).call()
 		this.setState({ rewardTokenBalance: rewardTokenBalance.toString() })
 
-		const stakingToken = new web3.eth.Contract(ERC20ABI, StakingContractAddresss)
-		this.setState({ stakingContractAddress: StakingContractAddresss })
-		this.setState({ stakingToken })
-
+		//Token Farm
 		const tokenFarm = new web3.eth.Contract(TokenFarmABI, TokenFarmContractAddress)
 		this.setState({ farmContractAddress: TokenFarmContractAddress })
 		this.setState({ tokenFarm })
-		let stakingBalance = await tokenFarm.methods.stakingBalance(this.state.account).call()
-		this.setState({ stakingBalance: stakingBalance.toString() })
+		let currentStakingBalance = await tokenFarm.methods.stakingBalance(this.state.account).call()
+		this.setState({ currentStakingBalance: currentStakingBalance.toString() })
 
 		this.setState({ loading: false })
 	}
@@ -61,19 +69,27 @@ class App extends Component {
 		}
 	}
 
-	stakeTokens = (amount) => {
+	stakeTokens = async (amount) => {
 		this.setState({ loading: true })
-		this.state.stakingToken.methods
-			.approve(this.state.tokenFarm._address, amount * 10 * StakingDecimals)
+		let txHash = await this.state.stakingToken.methods
+			.approve(this.state.tokenFarm._address, amount)
 			.send({ from: this.state.account })
-			.on("transactionHash", (hash) => {
-				this.state.tokenFarm.methods
-					.stakeTokens(amount)
-					.send({ from: this.state.account })
-					.on("transactionHash", (hash) => {
-						this.setState({ loading: false })
-					})
-			})
+		console.log("approval tx hash " + txHash)
+		await sleep(5000)
+		txHash = await this.state.tokenFarm.methods
+			.stakeTokens(amount)
+			.send({ from: this.state.account })
+		console.log("staking tx hash " + txHash)
+		// .on("transactionHash", (hash) => {
+		// 	console.log("approval finished...")
+		// 	this.state.tokenFarm.methods
+		// 		.stakeTokens(amount)
+		// 		.send({ from: this.state.account })
+		// 		.on("transactionHash", (hash) => {
+		// 			console.log("staking finished...")
+		// 			this.setState({ loading: false })
+		// 		})
+		// })
 	}
 
 	unstakeTokens = (amount) => {
@@ -82,6 +98,7 @@ class App extends Component {
 			.unstakeTokens()
 			.send({ from: this.state.account })
 			.on("transactionHash", (hash) => {
+				console.log("unstaking finished...")
 				this.setState({ loading: false })
 			})
 	}
@@ -97,7 +114,7 @@ class App extends Component {
 			stakingContractAddress: StakingContractAddresss,
 			rewardTokenBalance: "0",
 			stakingTokenBalance: "0",
-			stakingBalance: "0",
+			currentStakingBalance: "0",
 			loading: true,
 		}
 	}
@@ -117,7 +134,8 @@ class App extends Component {
 					rewardTokenContractAddress={this.state.rewardTokenContractAddress}
 					stakingContractAddress={this.state.stakingContractAddress}
 					rewardTokenBalance={this.state.rewardTokenBalance}
-					stakingBalance={this.state.stakingBalance}
+					currentStakingBalance={this.state.currentStakingBalance}
+					stakingTokensBalance={this.state.stakingTokensBalance} //for max available
 					stakeTokens={this.stakeTokens}
 					unstakeTokens={this.unstakeTokens}
 				/>

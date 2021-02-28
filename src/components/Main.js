@@ -15,11 +15,13 @@ class Main extends Component {
 					<tbody>
 						<tr>
 							<td>
-								{this.props.stakingBalance * 10 * 6}{" "}
-								<span className='text-muted'>stakingToken</span>
+								{window.web3.utils.fromWei(this.props.currentStakingBalance, "Ether")}
+
+								<span className='text-muted'> STAKE</span>
 							</td>
 							<td>
-								{this.props.rewardTokenBalance} <span className='text-muted'>rewardToken</span>
+								{window.web3.utils.fromWei(this.props.rewardTokenBalance, "Ether")}
+								<span className='text-muted'> REWARD</span>
 							</td>
 						</tr>
 					</tbody>
@@ -37,8 +39,8 @@ class Main extends Component {
 									<b>Stake Tokens</b>
 								</label>
 								<span className='float-right'>
-									<span className='text-muted'>Balance:</span>
-									{this.props.rewardTokenBalance * 10 * 6}
+									<span className='text-muted'>Max Amount:</span>
+									{window.web3.utils.fromWei(this.props.stakingTokensBalance, "Ether")}
 								</span>
 							</div>
 							<div className='input-group mb-4'>
@@ -54,7 +56,7 @@ class Main extends Component {
 								<div className='input-group-append'>
 									<div className='input-group-text'>
 										<img src={dai} height='30' alt='' />
-										&nbsp;&nbsp;&nbsp; rewardToken
+										&nbsp;&nbsp;&nbsp; REWARD
 									</div>
 								</div>
 							</div>
@@ -69,6 +71,7 @@ class Main extends Component {
 										event.preventDefault()
 										let amount
 										amount = this.input.value.toString()
+										amount = window.web3.utils.toWei(amount, "Ether")
 										this.props.stakeTokens(amount)
 									}}
 								>
